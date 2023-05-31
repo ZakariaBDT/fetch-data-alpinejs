@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch Data from API in Alpine JS</title>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-200 max-w-3xl mx-auto mt-10">
+    <div class="border bg-white">
+      <h1 class="font-bold text-center bg-slate-100 p-4 border-b text-xl">
+        Fetch Data from API in Alpine JS
+      </h1>
+      <div
+        class="p-6"
+        x-data="{users: [], visibleItems: 3}"
+        x-init="users = await( await fetch('https://jsonplaceholder.typicode.com/users')).json()"
+      >
+        <template x-for="user in users">
+          <div
+            class="border p-4 mb-4 flex justify-between items-center"
+            x-show="user.id <= visibleItems"
+            x-transition
+          >
+            <div
+              class="bg-blue-500 w-12 h-12 rounded-full text-white text-center flex justify-center items-center"
+              x-text="user.id"
+            ></div>
+            <div class="flex-1 ml-8">
+              <h2 class="font-bold text-lg" x-text="user.name"></h2>
+              <p class="text-gray-600" x-text="user.email"></p>
+            </div>
+            <div class="flex justify-center items-center">
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded"
+                @click="user.show = !user.show"
+              >
+                See Details
+              </button>
+            </div>
+            <div
+              class="border p-10 mb-4 w-96 fixed top-0 right-0 bg-white h-screen overflow-y-scroll"
+              x-show="user.show"
+              x-transition
+            >
+              <button @click="user.show = !user.show">
+                <svg
+                  class="w-6 h-6 text-gray-500 absolute top-6 right-6 cursor-pointer hover:text-gray-900"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <h2
+                class="font-bold text-lg border-b mb-4"
+                x-text="user.name"
+              ></h2>
+              <p class="mb-0.5">
+                <span class="font-bold"> Email: </span>
+                <span x-text="user.email"></span>
+              </p>
+
+              <p class="mb-0.5">
+                <span class="font-bold">Phone: </span>
+                <span x-text="user.phone" class="text-gray-600"></span>
+              </p>
+
+              <p class="mb-0.5">
+                <span class="font-bold">Website: </span
+                ><span x-text="user.website" class="text-gray-600"></span>
+              </p>
+
+              <p class="mb-0.5">
+                <span class="font-bold">Company: </span>
+                <span class="text-gray-600" x-text="user.company.name"></span>
+              </p>
+              <p class="font-bold">Address:</p>
+              <address>
+                <p class="text-gray-600" x-text="user.address.street"></p>
+                <p class="text-gray-600" x-text="user.address.suite"></p>
+                <p class="text-gray-600" x-text="user.address.city"></p>
+                <p class="text-gray-600" x-text="user.address.zipcode"></p>
+              </address>
+            </div>
+          </div>
+        </template>
+        <div class="flex justify-center" x-show="visibleItems < users.length ">
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            @click="visibleItems += 2"
+          >
+            Load More
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
